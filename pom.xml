@@ -3,20 +3,24 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>org.apache.mesos</groupId>
+  
+  <groupId>org.apache.mesos.wildfly</groupId>
   <artifactId>wildfly</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <repositories>
+    <modules>
+        <module>commons</module>
+        <module>scheduler</module>
+        <module>executor</module>
+    </modules>
+    <repositories>
     <repository>
       <id>apache-releases</id>
       <name>Apache releases</name>
       <url>https://repository.apache.org/content/repositories/releases/</url>
     </repository>
   </repositories>
-
+  
   <properties>
     <encoding>UTF-8</encoding>
 	<wildfly.version>9.0.1.Final</wildfly.version>
@@ -25,7 +29,7 @@
     <mockito.version>1.9.5</mockito.version>	
 	<wildfly.distribution.url>http://download.jboss.org/wildfly/${wildfly.version}/wildfly-${wildfly.version}.tar.gz</wildfly.distribution.url>
   </properties>
-
+  
   <dependencyManagement>
     <dependencies>
 		<dependency>
