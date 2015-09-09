@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.apache.mesos</groupId>
+  <artifactId>wildfly</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <repositories>
+    <repository>
+      <id>apache-releases</id>
+      <name>Apache releases</name>
+      <url>https://repository.apache.org/content/repositories/releases/</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <encoding>UTF-8</encoding>
+	<wildfly.version></wildfly.version>
+	<mesos.version>0.23.0</mesos.version>
+	<junit.version>4.11</junit.version>
+    <mockito.version>1.9.5</mockito.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+		<dependency>
+		  <groupId>org.apache.mesos</groupId>
+		  <artifactId>mesos</artifactId>
+		  <version>${mesos.version}</version>
+		</dependency>
+	    <dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>${junit.version}</version>
+		  <scope>test</scope>
+		</dependency>
+		<dependency>
+		  <groupId>org.mockito</groupId>
+		  <artifactId>mockito-all</artifactId>
+		  <version>${mockito.version}</version>
+		  <scope>test</scope>
+		</dependency>
+    </dependencies>
+  </dependencyManagement>
+    
+  <dependencies>
+       <dependency>
+      <groupId>org.apache.mesos</groupId>
+      <artifactId>mesos</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+</project>
