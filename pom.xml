@@ -19,10 +19,11 @@
 
   <properties>
     <encoding>UTF-8</encoding>
-	<wildfly.version></wildfly.version>
+	<wildfly.version>9.0.1.Final</wildfly.version>
 	<mesos.version>0.23.0</mesos.version>
 	<junit.version>4.11</junit.version>
-    <mockito.version>1.9.5</mockito.version>
+    <mockito.version>1.9.5</mockito.version>	
+	<wildfly.distribution.url>http://download.jboss.org/wildfly/${wildfly.version}/wildfly-${wildfly.version}.tar.gz</wildfly.distribution.url>
   </properties>
 
   <dependencyManagement>
