@@ -13,11 +13,11 @@ import java.util.concurrent.ExecutionException;
 /**
  * Manages persistence state of the application using mesos State abstraction
  */
-public class MesosStateStateStore implements IPersistentStateStore {
+public class MesosStateStore implements IPersistentStateStore {
 
   private State state;
   
-  public MesosStateStateStore(State state) 
+  public MesosStateStore(State state) 
   {
     this.state = state;
   }

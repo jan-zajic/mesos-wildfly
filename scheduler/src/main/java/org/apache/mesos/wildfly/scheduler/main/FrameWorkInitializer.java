@@ -7,9 +7,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.mesos.MesosSchedulerDriver;
 import org.apache.mesos.Protos;
-import org.apache.mesos.wildfly.persistence.DebugPhase;
+import org.apache.mesos.wildfly.common.DebugPhase;
 import org.apache.mesos.wildfly.persistence.SchedulerStateStore;
 import org.apache.mesos.wildfly.scheduler.WildFlyScheduler;
+import org.apache.mesos.wildfly.scheduler.main.debug.TestSchedulerDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,10 @@ public class FrameWorkInitializer {
       if(debugPhase == DebugPhase.STARTUP)
       {
           System.out.println("CALLED InitializationContext.registerFramework with masterUri: "+masterUri);  
+      }
+      else if(debugPhase == DebugPhase.MOCK)
+      {
+        TestSchedulerDriver.getInstance(scheduler).run();  
       } else {
         Protos.Credential cred = getCredential();
 

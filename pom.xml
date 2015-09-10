@@ -28,12 +28,15 @@
 	<wildfly.version>9.0.1.Final</wildfly.version>
 	<mesos.version>0.23.0</mesos.version>
 	<junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>	
+        <mockito.version>1.9.5</mockito.version>
+        <guava.version>12.0.1</guava.version>	
         <undertown.version>1.2.10.Final</undertown.version>
         <slf4j.version>1.7.10</slf4j.version>
         <logback-classic.version>1.1.2</logback-classic.version>
+        <resteasy.version>3.0.12.Final</resteasy.version>
+        <!-- http://download.jboss.org/wildfly/9.0.1.Final/wildfly-9.0.1.Final.tar.gz -->
 	<wildfly.distribution.url>http://download.jboss.org/wildfly/${wildfly.version}/wildfly-${wildfly.version}.tar.gz</wildfly.distribution.url>
-        <weld.version>3.0.0.Alpha13</weld.version>
+        <weld.version>3.0.0.Alpha13</weld.version>        
   </properties>
   
   <dependencyManagement>
@@ -64,6 +67,11 @@
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-core</artifactId>
             <version>${weld.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
           </dependency>
     </dependencies>
   </dependencyManagement>

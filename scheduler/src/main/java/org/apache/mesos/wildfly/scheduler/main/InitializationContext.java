@@ -10,21 +10,15 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
-import jdk.nashorn.internal.runtime.DebugLogger;
 import org.apache.mesos.MesosNativeLibrary;
-import org.apache.mesos.MesosSchedulerDriver;
-import org.apache.mesos.Protos.Credential;
-import org.apache.mesos.Protos.FrameworkID;
-import org.apache.mesos.Protos.FrameworkInfo;
 import org.apache.mesos.state.InMemoryState;
 import org.apache.mesos.state.State;
 import org.apache.mesos.state.ZooKeeperState;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfiguration;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfigurationProvider;
-import org.apache.mesos.wildfly.persistence.DebugPhase;
+import org.apache.mesos.wildfly.common.MesosWidlflyConfigProvider;
+import org.apache.mesos.wildfly.common.DebugPhase;
 import org.apache.mesos.wildfly.persistence.SchedulerStateStore;
 import org.apache.mesos.wildfly.state.IPersistentStateStore;
-import org.apache.mesos.wildfly.state.MesosStateStateStore;
+import org.apache.mesos.wildfly.state.MesosStateStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +38,12 @@ public class InitializationContext
     @Inject
     private FrameWorkInitializer frameWorkInitializer;
     @Inject
-    private MesosWidlflyFrameworkConfigurationProvider mesosWidlflyFrameworkConfiguration;
+    private MesosWidlflyConfigProvider mesosWidlflyFrameworkConfiguration;
     
     public void onStartup(@Observes @Initialized(ApplicationScoped.class) ServletContext init)
     {
         schedulerParameters.fillFromServletContext(init);        
-        this.persistenceStore = new MesosStateStateStore(getMesosState());                
+        this.persistenceStore = new MesosStateStore(getMesosState());                
         frameWorkInitializer.connectFramework();
     }
     

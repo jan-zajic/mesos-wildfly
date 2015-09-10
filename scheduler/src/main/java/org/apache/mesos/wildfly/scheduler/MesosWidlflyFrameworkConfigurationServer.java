@@ -4,14 +4,14 @@ package org.apache.mesos.wildfly.scheduler;
 import org.apache.mesos.wildfly.scheduler.param.SchedulerParametersMap;
 import org.apache.mesos.wildfly.scheduler.param.SchedulerParameter;
 import javax.inject.Inject;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfiguration;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfigurationProvider;
+import org.apache.mesos.wildfly.common.MesosWidlflyConfig;
+import org.apache.mesos.wildfly.common.MesosWidlflyConfigProvider;
 
 /**
  *
  * @author jzajic
  */
-public class MesosWidlflyFrameworkConfigurationServer implements MesosWidlflyFrameworkConfigurationProvider
+public class MesosWidlflyFrameworkConfigurationServer implements MesosWidlflyConfigProvider
 {
     
     @Inject
@@ -23,9 +23,9 @@ public class MesosWidlflyFrameworkConfigurationServer implements MesosWidlflyFra
     }
     
     @Override
-    public MesosWidlflyFrameworkConfiguration getConfiguration()
+    public MesosWidlflyConfig getConfiguration()
     {
-        MesosWidlflyFrameworkConfiguration cfg = new MesosWidlflyFrameworkConfiguration();
+        MesosWidlflyConfig cfg = new MesosWidlflyConfig();
         cfg.setNativeLibrary(getNativeLibrary());
         return cfg;
     }

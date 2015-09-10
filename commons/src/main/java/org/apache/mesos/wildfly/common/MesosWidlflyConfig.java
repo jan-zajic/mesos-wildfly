@@ -5,7 +5,7 @@ package org.apache.mesos.wildfly.common;
  *
  * @author jzajic
  */
-public class MesosWidlflyFrameworkConfiguration 
+public class MesosWidlflyConfig 
 {
 
     private String nativeLibrary;

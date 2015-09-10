@@ -1,5 +1,5 @@
 
-package org.apache.mesos.wildfly.persistence;
+package org.apache.mesos.wildfly.common;
 
 /**
  *
@@ -8,6 +8,6 @@ package org.apache.mesos.wildfly.persistence;
 public enum DebugPhase
 {
  
-    NONE, STARTUP
+    NONE, STARTUP, MOCK
     
 }

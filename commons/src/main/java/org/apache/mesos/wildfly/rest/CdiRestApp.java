@@ -1,5 +1,5 @@
 
-package org.apache.mesos.wildfly.scheduler.rest;
+package org.apache.mesos.wildfly.rest;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,18 +8,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.ws.rs.core.Application;
-import org.apache.mesos.wildfly.scheduler.main.RestService;
 
 /**
  *
  * @author jzajic
  */
 @ApplicationScoped
-public class RestApp extends Application {
+public class CdiRestApp extends Application
+{
 
     @Inject
     private Instance<RestService> services;
-    
+        
     @Override
     public Set<Object> getSingletons()
     {
@@ -30,5 +30,5 @@ public class RestApp extends Application {
         }
         return set;
     }
-    
+            
 }

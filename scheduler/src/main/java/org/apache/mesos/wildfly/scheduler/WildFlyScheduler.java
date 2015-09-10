@@ -1,14 +1,19 @@
 
 package org.apache.mesos.wildfly.scheduler;
 
+import java.io.IOException;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.event.Observes;
-import javax.servlet.ServletContext;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import org.apache.mesos.Protos;
 import org.apache.mesos.Scheduler;
 import org.apache.mesos.SchedulerDriver;
+import org.apache.mesos.wildfly.json.JsonMapper;
+import org.apache.mesos.wildfly.message.JsonMessage;
+import org.apache.mesos.wildfly.message.MessageTypeQualifierLiteral;
+import org.apache.mesos.wildfly.message.SchedulerMessageHandler;
 
 /**
  *
@@ -17,6 +22,12 @@ import org.apache.mesos.SchedulerDriver;
 @ApplicationScoped
 public class WildFlyScheduler implements Scheduler
 {
+    
+    @Inject
+    private JsonMapper jsonMapper;
+    
+    @Inject @Any
+    private Instance<SchedulerMessageHandler<?>> messageServices;
     
     public void registered(SchedulerDriver driver, Protos.FrameworkID frameworkId, Protos.MasterInfo masterInfo)
     {
@@ -38,11 +49,15 @@ public class WildFlyScheduler implements Scheduler
     public void statusUpdate(SchedulerDriver driver, Protos.TaskStatus status)
     {
     }
-
+    
+    @Override
     public void frameworkMessage(SchedulerDriver driver, Protos.ExecutorID executorId, Protos.SlaveID slaveId, byte[] data)
-    {
+    {        
+        JsonMessage message = jsonMapper.readMessage(data);
+        SchedulerMessageHandler messageService = messageServices.select(new MessageTypeQualifierLiteral(message.getClass())).get();
+        messageService.message(message, executorId, slaveId);       
     }
-
+    
     public void disconnected(SchedulerDriver driver)
     {
     }

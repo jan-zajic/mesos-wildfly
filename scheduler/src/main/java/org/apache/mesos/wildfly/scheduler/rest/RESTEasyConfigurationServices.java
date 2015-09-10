@@ -6,25 +6,26 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfiguration;
-import org.apache.mesos.wildfly.common.MesosWidlflyFrameworkConfigurationProvider;
-import org.apache.mesos.wildfly.scheduler.main.RestService;
+import org.apache.mesos.wildfly.common.MesosWidlflyConfig;
+import org.apache.mesos.wildfly.common.MesosWidlflyConfigProvider;
+import org.apache.mesos.wildfly.common.MesosWildFlyConstants;
+import org.apache.mesos.wildfly.rest.RestService;
 
 /**
  *
  * @author jzajic
  */
-@Path("/config")
+@Path(MesosWildFlyConstants.CONFIG_RESOURCE_PATH)
 @ApplicationScoped
 public class RESTEasyConfigurationServices implements RestService
 {
-
+    
     @Inject
-    private MesosWidlflyFrameworkConfigurationProvider configProvider;
+    private MesosWidlflyConfigProvider configProvider;
     
     @GET
     @Produces("application/json")
-    public MesosWidlflyFrameworkConfiguration produceJSON() 
+    public MesosWidlflyConfig produceJSON() 
     {
         return configProvider.getConfiguration();
     }

@@ -1,5 +1,5 @@
 
-package org.apache.mesos.wildfly.scheduler.main;
+package org.apache.mesos.wildfly.rest;
 
 /**
  *

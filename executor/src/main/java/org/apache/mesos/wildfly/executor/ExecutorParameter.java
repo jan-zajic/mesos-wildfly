@@ -1,30 +1,24 @@
 
-package org.apache.mesos.wildfly.scheduler.param;
+package org.apache.mesos.wildfly.executor;
 
-import static org.apache.mesos.wildfly.common.MesosWildFlyConstants.*;
 import org.apache.mesos.wildfly.common.DebugPhase;
 
 /**
  *
  * @author jzajic
  */
-public enum SchedulerParameter
+public enum ExecutorParameter
 {
-    
-    //MESOS FRAMEWORK NAME
-    FRAMEWORK_NAME("wildfly", "name", "n"), 
-    //ZOOKEPER
-    ZK_SERVER(DEFAULT_EMPTY, "zk.servers", "zk"), ZK_TIMEOUT(DEFAULT_EMPTY, "zk.timeout", "zkt"),
+
     //DEBUG PARAMETERS
     DEBUG_LEVEL(DebugPhase.NONE.name(), "debug", "d"),
-    //path to native library mesos.so
-    MESOS_NATIVE_LIB("/usr/local/lib/libmesos.so", "mesos.native.lib", "nl");    
+    PORT("8080", "port", "p");
     
-    public static SchedulerParameter forAlias(String alias, boolean enableShort)
+    public static ExecutorParameter forAlias(String alias, boolean enableShort)
     {
         if(alias == null)
             return null;
-        for(SchedulerParameter param : SchedulerParameter.values())
+        for(ExecutorParameter param : ExecutorParameter.values())
         {
             if(isMatch(param, alias, enableShort))
                 return param;
@@ -32,7 +26,7 @@ public enum SchedulerParameter
         return null;
     }
     
-    public static boolean isMatch(SchedulerParameter param, String alias, boolean enableShort)
+    public static boolean isMatch(ExecutorParameter param, String alias, boolean enableShort)
     {
         if(alias.equalsIgnoreCase(param.commandLine))
             return true;
@@ -44,7 +38,7 @@ public enum SchedulerParameter
 
     public static String getLongNamePrefix()
     {
-        return SchedulerParameter.class.getName().toLowerCase()+".";
+        return ExecutorParameter.class.getName().toLowerCase()+".";
     }
     
     public String getLongName()
@@ -56,7 +50,7 @@ public enum SchedulerParameter
     private String commandLine;
     private String commandLineShort;
     
-    private SchedulerParameter(String defaultValue, String commandLine, String commandLineShort)
+    private ExecutorParameter(String defaultValue, String commandLine, String commandLineShort)
     {
         this.defaultValue = defaultValue;
         this.commandLine = commandLine;
