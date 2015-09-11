@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.mesos.MesosSchedulerDriver;
 import org.apache.mesos.Protos;
+import org.apache.mesos.SchedulerDriver;
 import org.apache.mesos.wildfly.common.DebugPhase;
 import org.apache.mesos.wildfly.persistence.SchedulerStateStore;
 import org.apache.mesos.wildfly.scheduler.WildFlyScheduler;
@@ -29,6 +30,8 @@ public class FrameWorkInitializer {
     private WildFlyScheduler scheduler;
     @Inject
     private SchedulerParametersMap schedulerParameters;
+    
+    private SchedulerDriver schedulerDriver;
     
     void connectFramework()
     {
@@ -56,16 +59,16 @@ public class FrameWorkInitializer {
       }
       else if(debugPhase == DebugPhase.MOCK)
       {
-        TestSchedulerDriver.getInstance(scheduler).run();  
+        this.schedulerDriver = TestSchedulerDriver.getInstance(scheduler);  
       } else {
         Protos.Credential cred = getCredential();
 
         if (cred != null) {
           log.info("Registering with credentials.");
-          new MesosSchedulerDriver(scheduler, fInfo, masterUri, cred).run();
+          this.schedulerDriver = new MesosSchedulerDriver(scheduler, fInfo, masterUri, cred);
         } else {
           log.info("Registering without authentication");
-          new MesosSchedulerDriver(scheduler, fInfo, masterUri).run();
+          this.schedulerDriver = new MesosSchedulerDriver(scheduler, fInfo, masterUri);
         }
       }
     }
@@ -80,6 +83,11 @@ public class FrameWorkInitializer {
     {
         //TODO: handle credentials
         return "zk://"+schedulerParameters.getSchedulerParameter(SchedulerParameter.ZK_SERVER)+"/mesos";
+    }
+
+    public SchedulerDriver getSchedulerDriver()
+    {
+        return schedulerDriver;
     }
         
 }

@@ -13,6 +13,11 @@ import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletInfo;
+import java.util.Set;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -20,10 +25,14 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.mesos.ExecutorDriver;
+import org.apache.mesos.Protos;
+import org.apache.mesos.SchedulerDriver;
 import org.apache.mesos.wildfly.rest.CdiRestApp;
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.jboss.weld.environment.servlet.Listener;
+import org.jboss.weld.environment.servlet.WeldServletLifecycle;
 
 /**
  *
@@ -110,6 +119,23 @@ public class SchedulerMain
         Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
                 .setHandler(servletPath).build();
         server.start();
+        
+        ServletContext servletContext = manager.getDeployment().getServletContext();
+        BeanManager beanManager = (BeanManager) servletContext.getAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME);
+        FrameWorkInitializer context = getBean(beanManager, FrameWorkInitializer.class);        
+        SchedulerDriver driver = context.getSchedulerDriver();
+        if(driver != null)
+            driver.run();
+        else
+            System.out.println("SchedulerMain.started");
+    }
+    
+    private <T> T getBean(BeanManager beanManager, Class<T> aClass)
+    {
+        Set<Bean<?>> beans = beanManager.getBeans(aClass);
+        Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
+        CreationalContext<T> creationalContext = beanManager.createCreationalContext(bean);
+        return (T) beanManager.getReference(bean, aClass, creationalContext);
     }
     
 }

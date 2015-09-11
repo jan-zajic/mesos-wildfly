@@ -14,6 +14,11 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -21,10 +26,13 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.mesos.ExecutorDriver;
+import org.apache.mesos.Protos;
 import org.apache.mesos.wildfly.rest.CdiRestApp;
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 import org.jboss.weld.environment.servlet.Listener;
+import org.jboss.weld.environment.servlet.WeldServletLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class ExecutorMain {
     
     private static final Logger log = LoggerFactory.getLogger(ExecutorMain.class);
-        
+            
     public static void main(String[] args) throws Exception
     {
          final Options options = createCommandLineOptions();  
@@ -102,7 +110,7 @@ public class ExecutorMain {
         
         servletBuilder.addInitParameter("resteasy.injector.factory", CdiInjectorFactory.class.getName());
         servletBuilder.addInitParameter("javax.ws.rs.Application", CdiRestApp.class.getName());
-        
+                
         DeploymentManager manager = Servlets.defaultContainer().addDeployment(servletBuilder);
         manager.deploy();
         
@@ -113,7 +121,25 @@ public class ExecutorMain {
                 .addPrefixPath("/", servletHandler);
         Undertow server = Undertow.builder().addHttpListener(Integer.valueOf(port), "localhost")
                 .setHandler(servletPath).build();
-        server.start();
+        server.start();    
+                
+        ServletContext servletContext = manager.getDeployment().getServletContext();
+        BeanManager beanManager = (BeanManager) servletContext.getAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME);
+        ExecutorInitializationContext context = getBean(beanManager, ExecutorInitializationContext.class);
+        
+        ExecutorDriver driver = context.getDriver();
+        if(driver != null)
+            System.exit(driver.run() == Protos.Status.DRIVER_STOPPED ? 0 : 1);
+        else
+            System.out.println("ExecutorInitializationContext.onStartup");
     }
     
+    private <T> T getBean(BeanManager beanManager, Class<T> aClass)
+    {
+        Set<Bean<?>> beans = beanManager.getBeans(aClass);
+        Bean<T> bean = (Bean<T>) beanManager.resolve(beans);
+        CreationalContext<T> creationalContext = beanManager.createCreationalContext(bean);
+        return (T) beanManager.getReference(bean, aClass, creationalContext);
+    }
+        
 }

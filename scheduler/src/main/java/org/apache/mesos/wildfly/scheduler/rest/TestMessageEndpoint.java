@@ -15,6 +15,7 @@ import org.apache.mesos.wildfly.json.JsonMapper;
 import org.apache.mesos.wildfly.message.protocol.UptimeRequest;
 import org.apache.mesos.wildfly.rest.RestService;
 import org.apache.mesos.wildfly.scheduler.WildFlyScheduler;
+import org.apache.mesos.wildfly.scheduler.main.debug.LunchTaskRunnable;
 import org.apache.mesos.wildfly.scheduler.main.debug.TestSchedulerDriver;
 import org.apache.mesos.wildfly.test.FrameworkStateSerialization;
 import org.apache.mesos.wildfly.test.TestFrameworkMessage;
@@ -55,6 +56,8 @@ public class TestMessageEndpoint implements RestService {
                 .setCommand(Protos.CommandInfo.newBuilder().build())
                 .build();
         serialization.setExecutorInfo(executorInfo);
+        Thread thread = new Thread(new LunchTaskRunnable(serialization, "http://localhost:8081/test/launchTask"));
+        thread.start();
         return serialization;
     }
     

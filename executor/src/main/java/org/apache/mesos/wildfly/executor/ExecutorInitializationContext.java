@@ -25,11 +25,11 @@ public class ExecutorInitializationContext
     @Inject    
     private ExecutorParametersMap executorParameters;
     
+    private ExecutorDriver driver;
+    
     public void onStartup(@Observes @Initialized(ApplicationScoped.class) ServletContext init)
     {
         executorParameters.fillFromServletContext(init); 
-        ExecutorDriver driver = null;
-        
         DebugPhase phase = executorParameters.getEnumParameter(ExecutorParameter.DEBUG_LEVEL, DebugPhase.class);
         if(phase == DebugPhase.NONE)
         {
@@ -37,12 +37,12 @@ public class ExecutorInitializationContext
         } else if(phase == DebugPhase.MOCK)
         {
             driver = TestExecutorDriver.getInstance(wildFlyExecutor);
-        }
-        
-        if(driver != null)
-            System.exit(driver.run() == Status.DRIVER_STOPPED ? 0 : 1);
-        else
-            System.out.println("ExecutorInitializationContext.onStartup");
+        }        
+    }
+
+    public ExecutorDriver getDriver()
+    {
+        return driver;
     }
     
 }
