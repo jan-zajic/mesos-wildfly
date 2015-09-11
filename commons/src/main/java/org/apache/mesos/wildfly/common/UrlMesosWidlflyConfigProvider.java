@@ -30,7 +30,7 @@ public class UrlMesosWidlflyConfigProvider implements MesosWidlflyConfigProvider
     {
         this.remoteUrl = url;
         this.mapper = new ObjectMapper();
-        if(cache)
+        if(cache && url != null)
         {
             this.url = cacheUrl(remoteUrl);
         } else {
@@ -50,7 +50,7 @@ public class UrlMesosWidlflyConfigProvider implements MesosWidlflyConfigProvider
     
     public void reload()
     {
-        if(cache)
+        if(cache && url != null)
             this.url = cacheUrl(remoteUrl);
         else
             this.url = remoteUrl;

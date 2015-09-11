@@ -6,6 +6,7 @@ import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import org.apache.mesos.ExecutorDriver;
 import org.apache.mesos.MesosExecutorDriver;
 import org.apache.mesos.Protos.Status;
 import org.apache.mesos.wildfly.common.DebugPhase;
@@ -27,19 +28,21 @@ public class ExecutorInitializationContext
     public void onStartup(@Observes @Initialized(ApplicationScoped.class) ServletContext init)
     {
         executorParameters.fillFromServletContext(init); 
+        ExecutorDriver driver = null;
         
         DebugPhase phase = executorParameters.getEnumParameter(ExecutorParameter.DEBUG_LEVEL, DebugPhase.class);
         if(phase == DebugPhase.NONE)
         {
-            MesosExecutorDriver mesosExecutorDriver = new MesosExecutorDriver(wildFlyExecutor);
-            System.exit(mesosExecutorDriver.run() == Status.DRIVER_STOPPED ? 0 : 1);
+            driver = new MesosExecutorDriver(wildFlyExecutor);    
         } else if(phase == DebugPhase.MOCK)
         {
-            TestExecutorDriver.getInstance(wildFlyExecutor).run();
-        } else {
-            System.out.println("ExecutorInitializationContext.onStartup");
-        }        
+            driver = TestExecutorDriver.getInstance(wildFlyExecutor);
+        }
         
+        if(driver != null)
+            System.exit(driver.run() == Status.DRIVER_STOPPED ? 0 : 1);
+        else
+            System.out.println("ExecutorInitializationContext.onStartup");
     }
     
 }
